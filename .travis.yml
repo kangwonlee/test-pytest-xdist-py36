@@ -1,16 +1,24 @@
 language : shell
 
 env:
-  - CONDA_PYTHON=3.5
-  - CONDA_PYTHON=3.6
-  - CONDA_PYTHON=3.7
-  - CONDA_PYTHON=3.7.1
-  - CONDA_PYTHON=nightly
+  global:
+    - CONDA_PYTHON=3.6
+  matrix:
+    - XDIST=1.17.1
+    - XDIST=1.20.1
+    - XDIST=1.22.1
+    - XDIST=1.22.2
+    - XDIST=1.22.5
+    - XDIST=1.23.0
+    - XDIST=1.23.2
+    - XDIST=1.24.0
+    - XDIST=1.24.1
+    - XDIST=1.25.0
+    - XDIST=1.26.0
+    - XDIST=1.26.1
 
 os :
   - linux
-  - osx
-  - windows
 
 before_cache:
   - rm -rf $HOME/miniconda/locks $HOME/miniconda/pkgs $HOME/miniconda/var $HOME/miniconda/conda-meta/history $HOME/miniconda/envs/test-environment/conda-meta/history $HOME/miniconda/lib/python3.5/__pycache__ $HOME/miniconda/lib/python3.6/__pycache__ $HOME/miniconda/lib/python3.7/__pycache__;
@@ -90,6 +98,7 @@ install:
       conda env update -n test-environment python=$CONDA_PYTHON -f ./tests/environment.${CONDA_PYTHON}.yml;
     fi;
   - conda activate test-environment
+  - conda install pytest-xdist=$XDIST
   - conda list
 
 script: cd tests && py.test -n auto
